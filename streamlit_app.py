@@ -16,6 +16,11 @@ def get_fruit_load_list():
     my_cursor.execute("select * from pc_rivery_db.public.fruit_load_list")
     return my_cursor.fetchall()
 
+def insert_fruit_load_list(new_fruit):
+  with my_cnx.cursor() as my_cursor:
+    my_cursor.execute("insert into pc_rivery_db.public.fruit_load_list values('" + new_fruit + "')")
+    return 'Thanks for adding ' + new_fruit
+  
 my_fruit_list = pandas.read_csv("https://uni-lab-files.s3.us-west-2.amazonaws.com/dabw/fruit_macros.txt")
 my_fruit_list = my_fruit_list.set_index('Fruit')
 
@@ -51,9 +56,7 @@ if streamlit.button("Get fruit load list"):
   my_data_rows = get_fruit_load_list()
   streamlit.dataframe(my_data_rows)
 
-streamlit.stop()
-
-fruit_add = streamlit.text_input('What fruit would you like to add?','Jackfruit')
-streamlit.write('Thanks for adding ', fruit_add)
-my_cur.execute("insert into pc_rivery_db.public.fruit_load_list values('" + fruit_add + "')")
-
+add_my_fruit = streamlit.text_input('What fruit would you like to add?')
+if streamlit.button("Add a fruit to the list"):
+  return_msg = insert_fruit_load_list(add_my_fruit)
+  streamlit.text(return_msg)
